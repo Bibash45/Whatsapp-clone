@@ -1,38 +1,72 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { signUpSchema } from '../../utils/validation.js';
-import AuthInput from './Authinput.jsx'; 
-import { useDispatch, useSelector } from 'react-redux';
-import { PulseLoader } from 'react-spinners';
-import { Link, useNavigate } from 'react-router-dom';
-import { registerUser, changeStatus } from '../../features/userSlice.js';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { signUpSchema } from "../../utils/validation.js";
+import AuthInput from "./Authinput.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { PulseLoader } from "react-spinners";
+import { Link, useNavigate } from "react-router-dom";
+import { registerUser, changeStatus } from "../../features/userSlice.js";
+import { Picture } from "./Picture.jsx";
+import axios from "axios";
+
+const cloud_name = process.env.REACT_APP_CLOUD_NAME;
+const cloud_secret = process.env.REACT_APP_CLOUD_SECRET;
 
 const Registerform = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { status, error } = useSelector((state) => state.user);
-  
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const [picture, setPicture] = useState();
+  const [readablePicture, setReadablePicture] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(signUpSchema),
   });
 
   const onSubmit = async (data) => {
-    // Dispatching changeStatus before user registration
+    // changeStatus before user registration
     dispatch(changeStatus("loading"));
-    
-    // Dispatch registerUser and await result
-    const res = await dispatch(registerUser({ ...data, picture: "" }));
-    
-    if (res?.payload?.user) {
-      navigate('/login'); // Redirect on success
+
+    if (picture) {
+      //upload to cloudinary and then register user
+      await uploadImage().then(async (resonse) => {
+        let res = await dispatch(
+          registerUser({ ...data, picture: resonse.secure_url })
+        );
+        if (res?.payload?.user) {
+          navigate("/login"); // Redirect on success
+        }
+      });
+    } else {
+      // Dispatch registerUser and await result
+      let res = await dispatch(registerUser({ ...data, picture: "" }));
+      if (res?.payload?.user) {
+        navigate("/login"); // Redirect on success
+      }
     }
   };
 
+  const uploadImage = async () => {
+    let formData = new FormData();
+    formData.append("upload_preset", cloud_secret);
+    formData.append("file", picture);
+    const { data } = await axios.post(
+      `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+      formData
+    );
+    console.log("data:" + data);
+    return data;
+  };
+
   return (
-    <div className="h-screen w-full flex items-center justify-center overflow-hidden">
+    <div className="min-h-screen w-full flex items-center justify-center overflow-hidden">
       {/* container */}
-      <div className="max-w-md space-y-8 p-10 dark:bg-dark_bg_2 rounded-xl">
+      <div className="w-full max-w-md space-y-8 p-10 dark:bg-dark_bg_2 rounded-xl">
         {/* Heading */}
         <div className="text-center dark:text-dark_text_1">
           <h2 className="mt-6 text-3xl font-bold">Welcome</h2>
@@ -58,7 +92,7 @@ const Registerform = () => {
           <AuthInput
             name="status"
             type="text"
-            placeholder="Status"
+            placeholder="Status (Optional)"
             register={register}
             error={errors?.status?.message}
           />
@@ -68,6 +102,14 @@ const Registerform = () => {
             placeholder="Password"
             register={register}
             error={errors?.password?.message}
+          />
+
+          {/* Picture */}
+          <Picture
+            readablePicture={readablePicture}
+            setReadablePicture={setReadablePicture}
+            setPicture={setPicture}
+            picture={picture}
           />
 
           {/* Error message */}
