@@ -1,3 +1,4 @@
 import UserModel from "./userModel.js";
-
-export { UserModel };
+import ConversationModel from "./conversationModel.js";
+import MessageModel from "./messageModel.js";
+export { UserModel, ConversationModel, MessageModel };
