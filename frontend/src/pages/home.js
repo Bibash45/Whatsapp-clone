@@ -19,6 +19,7 @@ const Home = () => {
       <div className="container min-h-screen flex">
         {/* sidebar */}
         <Sidebar />
+        
       </div>
     </div>
   );

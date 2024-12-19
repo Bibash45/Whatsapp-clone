@@ -8,6 +8,10 @@ const conversationSchema = mongoose.Schema(
       required: [true, "Conversation is required"],
       trim: true,
     },
+    picture: {
+      type: String,
+      required: [true, "Conversation picture is required"],
+    },
     isGroup: {
       type: Boolean,
       required: true,
@@ -39,5 +43,3 @@ const ConversationModel =
   mongoose.model("ConversationModel", conversationSchema);
 
 export default ConversationModel;
-
-

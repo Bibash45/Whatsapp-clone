@@ -5,5 +5,5 @@ export const findUser = async (userId) => {
   if (!user) {
     throw new createHttpError.BadRequest("Please fill all fields");
   }
-  return user.name;
+  return user;
 };
