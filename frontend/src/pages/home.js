@@ -14,7 +14,7 @@ const Home = () => {
     }
   }, [user, user.token]);
   return (
-    <div className="min-h-screen dark:bg-dark_bg_1 flex items-center justify-center py-[19px]">
+    <div className="h-screen dark:bg-dark_bg_1 flex items-center justify-center py-[19px]">
       {/* container */}
       <div className="container min-h-screen flex">
         {/* sidebar */}
