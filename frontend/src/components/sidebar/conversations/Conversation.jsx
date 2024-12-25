@@ -1,10 +1,26 @@
-import React from "react";
+import React, { use } from "react";
 import moment from "moment";
 import { dateHandler } from "../../../utils/date";
+import { useDispatch, useSelector } from "react-redux";
+import { open_create_conversation } from "../../../features/chatSlice";
+import { getCoversationId } from "../../../utils/chat";
+import { capitalize } from "../../../utils/string";
 
 const Conversation = ({ convo }) => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+  const values = {
+    receiver_id: getCoversationId(user, convo.users),
+    token: user.token,
+  };
+  const openConversation = () => {
+    dispatch(open_create_conversation(values));
+  };
   return (
-    <li className="list-none h-[72px] w-full dark:bg-dark_bg_1 hover:dark:bg-dark_bg_2 cursor-pointer dark:text-dark_text_1 px-[10px] ">
+    <li
+      onClick={() => openConversation()}
+      className="list-none h-[72px] w-full dark:bg-dark_bg_1 hover:dark:bg-dark_bg_2 cursor-pointer dark:text-dark_text_1 px-[10px] "
+    >
       {/* container */}
       <div className="relative w-full flex items-center justify-between py-[10px]">
         {/* Left */}
@@ -21,13 +37,17 @@ const Conversation = ({ convo }) => {
           <div className="w-flex flex flex-col">
             {/* Conversation name */}
             <h1 className="font-semibold flex items-center gap-x-2">
-              {convo.name}
+              {capitalize(convo.name)}
             </h1>
             {/* conversation message */}
             <div>
               <div className="flex items-center gap-x-1 dark:text-dark_text_2">
                 <div className="flex-1 items-center gap-x-1 dark:text-dark_text_2">
-                  <p>{convo.latestMessage?.message}</p>
+                  <p>
+                    {convo.latestMessage?.message.length > 25
+                      ? `${convo.latestMessage.message.substring(0, 20)}...`
+                      : convo.latestMessage?.message}
+                  </p>
                 </div>
               </div>
             </div>
@@ -42,8 +62,8 @@ const Conversation = ({ convo }) => {
           </span>
         </div>
       </div>
-       {/*Border*/}
-       <div className="ml-16 border-b dark:border-b-dark_border_1"></div>
+      {/*Border*/}
+      <div className="ml-16 border-b dark:border-b-dark_border_1"></div>
     </li>
   );
 };
