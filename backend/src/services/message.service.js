@@ -34,7 +34,7 @@ export const getConvoMessages = async (convo_id) => {
   const messages = await MessageModel.find({ conversation: convo_id })
     .populate("sender", "name email pictures status")
     .populate("conversation", "name isGroup")
-    .sort({ createdAt: -1 });
+    .lean();
   if (!messages)
     throw createHttpError.BadRequest("Opps....Something went wrong !");
   return messages;

@@ -11,7 +11,7 @@ export const sendMessage = async (req, res, next) => {
     const user_id = req.user.userId;
     const { message, convo_id, files } = req.body;
     if (!convo_id || (!message && !files)) {
-      logger.error("Please provide a conversation id and a message body");
+      logger.error("Please provider a conversation id and a message body");
       return res.sendStatus(400);
     }
     const msgData = {
@@ -31,25 +31,13 @@ export const sendMessage = async (req, res, next) => {
 export const getMessage = async (req, res, next) => {
   try {
     const convo_id = req.params.convo_id;
-
-    // Check if convo_id is provided
     if (!convo_id) {
-      logger.error("Please add a conversation id in params");
-      return res.sendStatus(400); // Exit the function after sending a response
+      logger.error("Please add a conversation id in params.");
+      res.sendStatus(400);
     }
-
-    // Fetch messages
     const messages = await getConvoMessages(convo_id);
-
-    // Check if no messages exist
-    if (!messages || messages.length === 0) {
-      logger.error("No messages found");
-      return res.json({ message: "No messages found" });
-    }
-
-    // Return the messages
-    res.status(200).json(messages);
+    res.json(messages)
   } catch (error) {
-    next(error); // Pass error to the global error handler
+    next(error);
   }
 };

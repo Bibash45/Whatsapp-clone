@@ -3,14 +3,15 @@ import ChatHeader from "./header/ChatHeader";
 import ChatMessages from "./messages/ChatMessages";
 import { useDispatch, useSelector } from "react-redux";
 import { getConversationMessages } from "../../features/chatSlice";
+import { ChatActions } from "./actions";
 
 const ChatContainer = () => {
   const dispatch = useDispatch();
   const { activeConversation, messages } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
-  
+
   const { token } = user;
-  
+
   const values = {
     token,
     convo_id: activeConversation._id,
@@ -30,6 +31,8 @@ const ChatContainer = () => {
         <ChatHeader />
         {/* Chat messages */}
         <ChatMessages />
+        {/* Chat  Actions*/}
+        <ChatActions />
       </div>
     </div>
   );
