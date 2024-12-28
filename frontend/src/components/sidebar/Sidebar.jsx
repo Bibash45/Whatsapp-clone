@@ -9,7 +9,7 @@ const Sidebar = () => {
   console.log(searchResults);
 
   return (
-    <div className="w-[40%] h-full select-none">
+    <div className="flex0030 max-w-[30%] h-full select-none">
       {/* sidebar header */}
       <SidebarHeader />
       {/* notification */}
