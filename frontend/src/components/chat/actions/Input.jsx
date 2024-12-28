@@ -1,6 +1,6 @@
 import React from "react";
 
-const Input = ({ message, setMessage }) => {
+const Input = ({ message, setMessage, textRef }) => {
   return (
     <div className="w-full ">
       <input
@@ -9,6 +9,7 @@ const Input = ({ message, setMessage }) => {
         placeholder="Type a message"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        ref={textRef}
       />
     </div>
   );
