@@ -39,8 +39,8 @@ const Conversation = ({ convo, socket }) => {
           {/* conversation user picture */}
           <div className="relative min-w-[50px] max-w-[50px] h-[50px] rounded-full overflow-hidden">
             <img
-              src={getCoversationPicture(user, convo.users)}
-              alt={capitalize(getCoversationName(user, convo.users))}
+              src={convo.picture}
+              alt={convo.name}
               className="w-full h-full object-cover object-center"
             />
           </div>
@@ -48,7 +48,7 @@ const Conversation = ({ convo, socket }) => {
           <div className="w-flex flex flex-col">
             {/* Conversation name */}
             <h1 className="font-semibold flex items-center gap-x-2">
-              {capitalize(getCoversationName(user, convo.users))}
+              {capitalize(convo.name)}
             </h1>
             {/* conversation message */}
             <div>

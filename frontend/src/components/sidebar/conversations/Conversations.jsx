@@ -12,7 +12,7 @@ const Conversations = () => {
         {conversations &&
           conversations
             .filter((c) => c.latestMessage || c._id === activeConversation._id)
-            .map((convo) => {
+            .map((convo) => {              
               return <Conversation convo={convo} key={convo._id} />;
             })}
       </ul>
