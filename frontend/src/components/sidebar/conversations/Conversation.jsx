@@ -3,10 +3,12 @@ import moment from "moment";
 import { dateHandler } from "../../../utils/date";
 import { useDispatch, useSelector } from "react-redux";
 import { open_create_conversation } from "../../../features/chatSlice";
-import { getCoversationId } from "../../../utils/chat";
+import { getCoversationId, getCoversationPicture } from "../../../utils/chat";
 import { capitalize } from "../../../utils/string";
+import SocketContext from "../../../context/SocketContext";
+import { getCoversationName } from "../../../utils/chat";
 
-const Conversation = ({ convo }) => {
+const Conversation = ({ convo, socket }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { activeConversation } = useSelector((state) => state.chat);
@@ -14,19 +16,21 @@ const Conversation = ({ convo }) => {
     receiver_id: getCoversationId(user, convo.users),
     token: user.token,
   };
-  const openConversation = () => {
-    dispatch(open_create_conversation(values));
+  const openConversation = async () => {
+    let newConvo = await dispatch(open_create_conversation(values));
+    socket.emit("join conversation", newConvo.payload._id);
   };
+
   return (
     <li
       onClick={() => openConversation()}
-      className={`list-none h-[72px] w-full dark:bg-dark_bg_1 hover:${
+      className={`list-none h-[72px] w-full dark:bg-dark_bg_1 ${
         convo._id === activeConversation._id
-          ? "dark:bg-dark_hover_1"
-          : "dark:bg-dark_bg_2"
+          ? "hover:dark:bg-dark_hover_1"
+          : "hover:dark:bg-dark_bg_2"
       } cursor-pointer dark:text-dark_text_1 px-[10px] ${
         convo._id === activeConversation._id && "dark:bg-dark_hover_1"
-      }`}
+      } `}
     >
       {/* container */}
       <div className="relative w-full flex items-center justify-between py-[10px]">
@@ -35,8 +39,8 @@ const Conversation = ({ convo }) => {
           {/* conversation user picture */}
           <div className="relative min-w-[50px] max-w-[50px] h-[50px] rounded-full overflow-hidden">
             <img
-              src={convo.picture}
-              alt={convo.name}
+              src={getCoversationPicture(user, convo.users)}
+              alt={capitalize(getCoversationName(user, convo.users))}
               className="w-full h-full object-cover object-center"
             />
           </div>
@@ -44,7 +48,7 @@ const Conversation = ({ convo }) => {
           <div className="w-flex flex flex-col">
             {/* Conversation name */}
             <h1 className="font-semibold flex items-center gap-x-2">
-              {capitalize(convo.name)}
+              {capitalize(getCoversationName(user, convo.users))}
             </h1>
             {/* conversation message */}
             <div>
@@ -75,4 +79,10 @@ const Conversation = ({ convo }) => {
   );
 };
 
-export default Conversation;
+const ConversationWithContext = (props) => (
+  <SocketContext.Consumer>
+    {(socket) => <Conversation {...props} socket={socket} />}
+  </SocketContext.Consumer>
+);
+
+export default ConversationWithContext;

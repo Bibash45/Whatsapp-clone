@@ -2,23 +2,27 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCoversationId } from "../../../utils/chat";
 import { open_create_conversation } from "../../../features/chatSlice";
+import SocketContext from "../../../context/SocketContext";
 
-const Contact = ({ contact, setSearchResults }) => {
+const Contact = ({ contact, setSearchResults, socket }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+  const { activeConversation } = useSelector((state) => state.chat);
   const values = {
     receiver_id: contact._id,
     token: user.token,
   };
   const openConversation = async () => {
-    await dispatch(open_create_conversation(values));
+    let newConvo = await dispatch(open_create_conversation(values));
+    socket.emit("join conversation", newConvo.payload._id);
     setSearchResults([]);
   };
 
   return (
     <li
       onClick={() => openConversation()}
-      className="list-none h-[72px] hover:dark_bg_2 cursor-pointer dark:text-dark_text_1 px-[10px]"
+      className={`list-none h-[72px] hover:dark_bg_2 cursor-pointer dark:text-dark_text_1 px-[10px] 
+    hover:dark:bg-dark_hover_1 `}
     >
       {/* container */}
       <div className="flex items-center gap-x-3 py-[10px]">
@@ -55,4 +59,10 @@ const Contact = ({ contact, setSearchResults }) => {
   );
 };
 
-export default Contact;
+const ContactWithContext = (props) => (
+  <SocketContext.Consumer>
+    {(socket) => <Contact {...props} socket={socket} />}
+  </SocketContext.Consumer>
+);
+
+export default ContactWithContext;

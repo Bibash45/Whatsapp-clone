@@ -6,8 +6,8 @@ import { sendMessage } from "../../../features/chatSlice";
 import { ClipLoader } from "react-spinners";
 import EmojiPickerApp from "./EmojiPicker";
 import { Attachments } from "./attachments";
-
-const ChatActions = () => {
+import SocketContext from "../../../context/SocketContext";
+const ChatActions = ({ socket }) => {
   const dispatch = useDispatch();
   const [showEmojis, setShowEmojis] = useState(false);
   const [showAttachments, setShowAttachments] = useState(false);
@@ -28,7 +28,8 @@ const ChatActions = () => {
   const sendMessageHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await dispatch(sendMessage(values));
+    let newMsg = await dispatch(sendMessage(values));
+    socket.emit("send message ", newMsg.payload);
     setMessage("");
     setLoading(false);
   };
@@ -70,4 +71,9 @@ const ChatActions = () => {
   );
 };
 
-export default ChatActions;
+const ChatActionsWithSocket = (props) => (
+  <SocketContext.Consumer>
+    {(socket) => <ChatActions {...props} socket={socket} />}
+  </SocketContext.Consumer>
+);
+export default ChatActionsWithSocket;
