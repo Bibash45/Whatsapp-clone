@@ -1,9 +1,13 @@
 import { useSelector } from "react-redux";
 import Message from "./Message";
 import { useEffect, useRef } from "react";
+import Typing from "./Typing";
 
-const ChatMessages = () => {
+const ChatMessages = ({ typing }) => {
   const { messages } = useSelector((state) => state.chat);
+  const { activeConversation } = useSelector((state) => state.chat);
+  console.log(activeConversation);
+  console.log(typing);
 
   const { user } = useSelector((state) => state.user);
   const endRef = useRef();
@@ -28,7 +32,10 @@ const ChatMessages = () => {
               />
             );
           })}
-        <div className="mt-2" ref={endRef}></div>
+
+        {typing === activeConversation._id ? <Typing /> : ""}
+
+        <div className="mx-2" ref={endRef}></div>
       </div>
     </div>
   );
