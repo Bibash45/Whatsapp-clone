@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import {
   CameraIcon,
   ContactIcon,
-  DocumentIcon,
   PollIcon,
   StickerIcon,
 } from "../../../../../svg";
 import PhotoAttacment from "./PhotoAttacment";
+import DocumentAttachment from "./DocumentAttachment";
 
 const Menu = () => {
   return (
@@ -21,11 +21,7 @@ const Menu = () => {
           <ContactIcon />
         </button>
       </li>
-      <li>
-        <button type="button" className="rounded-full bg-[#5F66CD]">
-          <DocumentIcon />
-        </button>
-      </li>
+      <DocumentAttachment />
       <li>
         <button type="button" className="rounded-full bg-[#D3396D]">
           <CameraIcon />
