@@ -8,7 +8,6 @@ const PhotoAttacment = () => {
   const dispatch = useDispatch();
   const inputRef = useRef(null);
   const { files } = useSelector((state) => state.chat);
-  console.log(files);
 
   const imageHandler = (e) => {
     let files = Array.from(e.target.files);
