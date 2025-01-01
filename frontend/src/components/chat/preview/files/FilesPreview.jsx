@@ -20,7 +20,7 @@ const FilesPreview = () => {
           {/* Message Input */}
           <Input message={message} setMessage={setMessage} />
           {/*  Send and manipulate files */}
-          <HandleAndSend activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
+          <HandleAndSend activeIndex={activeIndex} setActiveIndex={setActiveIndex} message={message} />
         </div>
       </div>
     </div>

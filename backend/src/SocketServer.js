@@ -31,6 +31,7 @@ export default function (socket, io) {
 
   // send and receive message
   socket.on("send message", (message) => {
+    
     let conversation = message.conversation;
     if (!conversation.users) return;
 

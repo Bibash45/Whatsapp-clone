@@ -68,6 +68,8 @@ export const sendMessage = createAsyncThunk(
   "message/send",
   async (values, { rejectWithValue }) => {
     const { token, message, convo_id, files } = values;
+    console.log(files);
+    
     try {
       const { data } = await axios.post(
         MESSAGE_ENDPOINT,

@@ -2,15 +2,17 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const FileViewer = ({activeIndex}) => {
+  console.log(activeIndex);
+  
   const { files } = useSelector((state) => state.chat);
   return (
     <div className="w-full max-w-[60%] ">
       {/* Container */}
       <div className="flex justify-center items-center ">
-        {files[0].type === "IMAGE" ? (
+        {files[activeIndex].type === "IMAGE" ? (
           <img
             src={files[activeIndex].fileData}
-            alt={files[activeIndex].file.name}
+            alt=""
             className="max-w-[80%] object-contain hview"
           />
         ) : (
