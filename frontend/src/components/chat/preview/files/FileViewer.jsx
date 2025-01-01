@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-const FileViewer = () => {
+const FileViewer = ({activeIndex}) => {
   const { files } = useSelector((state) => state.chat);
   return (
     <div className="w-full max-w-[60%] ">
@@ -9,16 +9,16 @@ const FileViewer = () => {
       <div className="flex justify-center items-center ">
         {files[0].type === "IMAGE" ? (
           <img
-            src={files[0].fileData}
-            alt={files[0].file.name}
+            src={files[activeIndex].fileData}
+            alt={files[activeIndex].file.name}
             className="max-w-[80%] object-contain hview"
           />
         ) : (
           <div className="min-w-full hview flex flex-col items-center justify-center">
             {/* File Icon Image */}
             <img
-              src={`../../../../images/file/${files[0].type}.png`}
-              alt={files[0].type}
+              src={`../../../../images/file/${files[activeIndex].type}.png`}
+              alt={files[activeIndex].type}
             />
             {/* No preview text */}
             <h1 className="dark:text-dark_text_2 text-2xl">
@@ -26,7 +26,7 @@ const FileViewer = () => {
             </h1>
             {/* File size / type */}
             <span className="dark:text-dark_text_2">
-              {files[0].file.size} KB - {files[0].type}
+              {files[activeIndex].file.size} KB - {files[activeIndex].type}
             </span>
           </div>
         )}

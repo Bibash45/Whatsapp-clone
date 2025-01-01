@@ -2,7 +2,7 @@ import React from "react";
 import { CloseIcon } from "../../../../svg";
 import { useDispatch, useSelector } from "react-redux";
 import { clearFiles } from "../../../../features/chatSlice";
-const Header = () => {
+const Header = ({activeIndex}) => {
   const dispatch = useDispatch();
   const { files } = useSelector((state) => state.chat);
   const clearFilesHandler = () => {
@@ -19,7 +19,7 @@ const Header = () => {
         </div>
         {/* Files name */}
         <h1 className="dark:text-dark_text_1 text-[15px] ">
-          {files[0]?.file?.name}
+          {files[activeIndex]?.file?.name}
         </h1>
         {/* Empty tag */}
         <span></span>
