@@ -23,7 +23,7 @@ const uploadToCloudinary = async (formData) => {
   return new Promise(async (resolve) => {
     return await axios
       .post(
-        `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+        `https://api.cloudinary.com/v1_1/${cloud_name}/raw/upload`,
         formData
       )
       .then(({ data }) => {

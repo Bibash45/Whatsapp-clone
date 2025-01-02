@@ -64,6 +64,8 @@ const HandleAndSend = ({ setActiveIndex, activeIndex, message, socket }) => {
                     alt="img"
                     className="w-full h-full object-cover "
                   />
+                ) : file.type === "VIDEO" ? (
+                  <video src={file.fileData}></video>
                 ) : (
                   <img
                     src={`../../../../images/file/${files[0].type}.png`}
