@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Add from "./Add";
-import { SendIcon } from "../../../../svg";
+import { CloseIcon, SendIcon } from "../../../../svg";
 import { uploadFiles } from "../../../../utils/upload";
-import { clearFiles, sendMessage } from "../../../../features/chatSlice";
+import {
+  clearFiles,
+  removeFileFromFiles,
+  sendMessage,
+} from "../../../../features/chatSlice";
 import SocketContext from "../../../../context/SocketContext";
+import { ClipLoader } from "react-spinners";
 
 const HandleAndSend = ({ setActiveIndex, activeIndex, message, socket }) => {
   const dispatch = useDispatch();
@@ -12,6 +17,8 @@ const HandleAndSend = ({ setActiveIndex, activeIndex, message, socket }) => {
   const { user } = useSelector((state) => state.user);
   const { token } = user;
   const { files, activeConversation } = useSelector((state) => state.chat);
+
+  // send message handler
   const sendMessageHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -31,6 +38,10 @@ const HandleAndSend = ({ setActiveIndex, activeIndex, message, socket }) => {
     setActiveIndex(0);
     dispatch(clearFiles());
   };
+  // handle remove file
+  const handleRemoveFile = (index) => {
+    dispatch(removeFileFromFiles(index));
+  };
   return (
     <div className="w-[97%] flex items-center justify-between mt-2 border-t dark:border-dark_border_2">
       {/* Empty  */}
@@ -42,7 +53,7 @@ const HandleAndSend = ({ setActiveIndex, activeIndex, message, socket }) => {
             <>
               <div
                 key={i}
-                className={`w-14 h-14 border dark:border-white rounded-md overflow-hidden cursor-pointer ${
+                className={`fileThumbnail relative w-14 h-14 border dark:border-white rounded-md overflow-hidden cursor-pointer ${
                   activeIndex === i ? "border-[3px] !border-green_1" : ""
                 } `}
                 onClick={() => setActiveIndex(i)}
@@ -60,6 +71,13 @@ const HandleAndSend = ({ setActiveIndex, activeIndex, message, socket }) => {
                     className="h-10 w-8 mt-1.5 ml-2.5"
                   />
                 )}
+                {/* Remove file icon */}
+                <div
+                  onClick={() => handleRemoveFile(i)}
+                  className="removeFileIcon hidden"
+                >
+                  <CloseIcon className="dark:fill-white absolute right-1 top-0 w-4 h-4" />
+                </div>
               </div>
             </>
           );
@@ -72,7 +90,11 @@ const HandleAndSend = ({ setActiveIndex, activeIndex, message, socket }) => {
         className="bg-green_1 w-16 h-16 mt-2 rounded-full flex items-center justify-center cursor-pointer"
         onClick={(e) => sendMessageHandler(e)}
       >
-        <SendIcon className="fill-white" />
+        {loading ? (
+          <ClipLoader color="#E9EDEF" size={25} />
+        ) : (
+          <SendIcon className="fill-white" />
+        )}
       </div>
     </div>
   );

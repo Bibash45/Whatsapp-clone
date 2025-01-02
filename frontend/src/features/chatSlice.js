@@ -69,7 +69,7 @@ export const sendMessage = createAsyncThunk(
   async (values, { rejectWithValue }) => {
     const { token, message, convo_id, files } = values;
     console.log(files);
-    
+
     try {
       const { data } = await axios.post(
         MESSAGE_ENDPOINT,
@@ -120,6 +120,12 @@ export const chatSlice = createSlice({
     },
     clearFiles: (state, action) => {
       state.files = [];
+    },
+    removeFileFromFiles: (state, action) => {
+      let index = action.payload;
+      let files = [...state.files];
+      let fileToRemove = [files[index]];
+      state.files = files.filter((file) => !fileToRemove.includes(file));
     },
   },
   extraReducers: (builder) => {
@@ -185,7 +191,8 @@ export const {
   setActiveConversation,
   updateMessagesAndConversations,
   addFiles,
-  clearFiles
+  clearFiles,
+  removeFileFromFiles,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;
