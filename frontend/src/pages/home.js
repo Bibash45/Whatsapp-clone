@@ -9,7 +9,7 @@ import { ChatContainer, Welcome, WhatsappHome } from "../components/chat";
 import SocketContext from "../context/SocketContext";
 import Call from "../components/chat/call/Call";
 const callData = {
-  receivingCall: false,
+  receivingCall: true,
   callEnded: false,
 };
 
