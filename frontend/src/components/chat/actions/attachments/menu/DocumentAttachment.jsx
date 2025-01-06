@@ -59,7 +59,23 @@ const DocumentAttachment = () => {
         type="file"
         hidden
         ref={inputRef}
-        accept="application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-excel,application/zip,application/vnd.rar,audio/mp3,video/wav"
+        accept="
+    application/pdf,
+    text/plain,
+    application/msword,
+    application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+    application/vnd.ms-powerpoint,
+    application/vnd.openxmlformats-officedocument.presentationml.presentation,
+    application/vnd.ms-excel,
+    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+    application/zip,
+    application/vnd.rar,
+    application/x-tar,
+    application/x-7z-compressed,
+    application/json,
+    application/xml,
+    text/csv
+  "
         onChange={documentHandler}
         multiple
       />

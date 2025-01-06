@@ -7,12 +7,23 @@ import {
 } from "../features/chatSlice";
 import { ChatContainer, Welcome, WhatsappHome } from "../components/chat";
 import SocketContext from "../context/SocketContext";
+import Call from "../components/chat/call/Call";
+const callData = {
+  receivingCall: false,
+  callEnded: false,
+};
 
 const Home = ({ socket }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { activeConversation } = useSelector((state) => state.chat);
   const [onlineUsers, setOnlineUsers] = useState([]);
+
+  // call
+  const [call, setCall] = useState(callData);
+  const { receivingCall, callEnded } = call;
+  const [callAccepted, setCallAccepted] = useState(false);
+
   // typing
   const [typing, setTyping] = useState(false);
 
@@ -45,18 +56,23 @@ const Home = ({ socket }) => {
   }, []);
 
   return (
-    <div className="h-screen dark:bg-dark_bg_1 flex items-center justify-center ">
-      {/* container */}
-      <div className="container min-h-screen flex py-[19px]">
-        {/* sidebar */}
-        <Sidebar onlineUsers={onlineUsers} typing={typing} />
-        {activeConversation._id ? (
-          <ChatContainer onlineUsers={onlineUsers} typing={typing} />
-        ) : (
-          <WhatsappHome />
-        )}
+    <>
+      <div className="h-screen dark:bg-dark_bg_1 flex items-center justify-center ">
+        {/* container */}
+        <div className="container min-h-screen flex py-[19px]">
+          {/* sidebar */}
+          <Sidebar onlineUsers={onlineUsers} typing={typing} />
+          {activeConversation._id ? (
+            <ChatContainer onlineUsers={onlineUsers} typing={typing} />
+          ) : (
+            <WhatsappHome />
+          )}
+        </div>
       </div>
-    </div>
+
+      {/* Call  */}
+      <Call call={call} setCall={setCall} callAccepted={callAccepted} />
+    </>
   );
 };
 
