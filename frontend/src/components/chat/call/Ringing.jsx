@@ -3,6 +3,7 @@ import ringtone from "../../../assets/ringtone.mp3";
 import { CloseIcon, ValidIcon } from "../../../svg";
 
 const Ringing = ({ call, setCall }) => {
+  const { name, picture } = call;
   const [timer, setTimer] = useState(0);
   let interval;
   const handleTimer = () => {
@@ -27,13 +28,13 @@ const Ringing = ({ call, setCall }) => {
         {/* Call infos */}
         <div className="flex items-center gap-x-2 ">
           <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMgSeKmifEDFo3GytCm70KY4LCMsBi0P-aFA&s"
+            src={picture}
             alt={`caller profile pic`}
             className="w-28 h-28 rounded-full "
           />
           <div>
             <h1 className="dark:text-white">
-              <b>Bibash</b>
+              <b>{name}</b>
             </h1>
             <span className="dark:text-dark_text_2 ">Whatsapp video...</span>
           </div>

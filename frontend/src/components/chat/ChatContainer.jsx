@@ -6,7 +6,7 @@ import { getConversationMessages } from "../../features/chatSlice";
 import { ChatActions } from "./actions";
 import { checkOnlineStatus, getCoversationId } from "../../utils/chat";
 import FilesPreview from "./preview/files/FilesPreview";
-const ChatContainer = ({ onlineUsers, typing }) => {
+const ChatContainer = ({ onlineUsers, typing, callUser }) => {
   const dispatch = useDispatch();
   const { activeConversation, messages } = useSelector((state) => state.chat);
   const { files } = useSelector((state) => state.chat);
@@ -38,6 +38,7 @@ const ChatContainer = ({ onlineUsers, typing }) => {
             user,
             activeConversation.users
           )}
+          callUser={callUser}
         />
         {files.length > 0 ? (
           <FilesPreview />
