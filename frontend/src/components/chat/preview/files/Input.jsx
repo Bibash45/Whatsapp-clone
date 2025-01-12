@@ -1,9 +1,7 @@
-import React from "react";
-
-const Input = ({ message, setMessage }) => {
+export default function Input({ message, setMessage }) {
   return (
     <div className="w-full max-w-[60%] dark:bg-dark_hover_1 rounded-lg">
-      {/* Message Input */}
+      {/*Message input*/}
       <input
         type="text"
         placeholder="Type a message"
@@ -13,6 +11,4 @@ const Input = ({ message, setMessage }) => {
       />
     </div>
   );
-};
-
-export default Input;
+}

@@ -1,26 +1,26 @@
-import React, { use, useState } from "react";
-import { SidebarHeader } from "./header";
-import { Notifications } from "../notifications";
-import { Search, SearchResults } from "./search";
+import { useState } from "react";
 import { Conversations } from "./conversations";
+import { SidebarHeader } from "./header";
+import { Notifications } from "./notifications";
+import { Search } from "./search";
+import { SearchResults } from "./search";
 
-const Sidebar = ({onlineUsers,typing}) => {
+export default function Sidebar({ onlineUsers, typing }) {
   const [searchResults, setSearchResults] = useState([]);
-  console.log(searchResults);
-
   return (
     <div className="flex0030 max-w-[30%] h-full select-none">
-      {/* sidebar header */}
+      {/*Sidebar Header*/}
       <SidebarHeader />
-      {/* notification */}
+      {/*Notifications */}
       <Notifications />
-      {/* search */}
+      {/*Search*/}
       <Search
         searchLength={searchResults.length}
         setSearchResults={setSearchResults}
       />
       {searchResults.length > 0 ? (
         <>
+          {/*Search results*/}
           <SearchResults
             searchResults={searchResults}
             setSearchResults={setSearchResults}
@@ -28,12 +28,10 @@ const Sidebar = ({onlineUsers,typing}) => {
         </>
       ) : (
         <>
-          {/* conversations */}
+          {/*Conversations*/}
           <Conversations onlineUsers={onlineUsers} typing={typing} />
         </>
       )}
     </div>
   );
-};
-
-export default Sidebar;
+}

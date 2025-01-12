@@ -29,7 +29,6 @@ export const registerUser = createAsyncThunk(
     }
   }
 );
-
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (values, { rejectWithValue }) => {
@@ -82,8 +81,6 @@ export const userSlice = createSlice({
         state.status = "loading";
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log("respose" + action);
-
         state.status = "succeeded";
         state.error = "";
         state.user = action.payload.user;

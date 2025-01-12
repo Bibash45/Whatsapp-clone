@@ -1,5 +1,5 @@
 import express from "express";
-import dotenv, { parse } from "dotenv";
+import dotenv from "dotenv";
 import morgan from "morgan";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
@@ -13,7 +13,7 @@ import routes from "./routes/index.js";
 //dotEnv config
 dotenv.config();
 
-// create express app
+//create express app
 const app = express();
 
 //morgan
@@ -21,50 +21,48 @@ if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
 
-// helmet
+//helmet
 app.use(helmet());
 
-// parse json request url
+//parse json request url
 app.use(express.json());
 
-// parse json request body
+//parse json request body
 app.use(express.urlencoded({ extended: true }));
 
-// sanitize request data
+//sanitize request data
 app.use(mongoSanitize());
 
-// enable cookie parser
+//enable cookie parser
 app.use(cookieParser());
 
-// gzip compression
+//gzip compression
 app.use(compression());
 
-// file upload
+//file upload
 app.use(
   fileUpload({
     useTempFiles: true,
   })
 );
 
-// cors
+//cors
 app.use(cors());
 
-// api v1 routes
-// http://localhost:8000/api/v1/auth/register
+//api v1 routes
 app.use("/api/v1", routes);
 
-// not found error handling
 app.use(async (req, res, next) => {
-  next(createHttpError.NotFound("This route does not exist"));
+  next(createHttpError.NotFound("This route does not exist."));
 });
 
-// error handling
+//error handling
 app.use(async (err, req, res, next) => {
   res.status(err.status || 500);
   res.send({
     error: {
       status: err.status || 500,
-      message: err.message || "Internal Server Error",
+      message: err.message,
     },
   });
 });

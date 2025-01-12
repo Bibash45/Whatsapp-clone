@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CallAcions from "./CallActions";
+import CallAcions from "./CallAcions";
 import CallArea from "./CallArea";
 import Header from "./Header";
 import Ringing from "./Ringing";
@@ -17,15 +17,15 @@ export default function Call({
   totalSecInCall,
   setTotalSecInCall,
 }) {
-  const { receivingCall, callEnded, name, picture } = call;
+  const { receiveingCall, callEnded, name, picture } = call;
   const [showActions, setShowActions] = useState(false);
   const [toggle, setToggle] = useState(false);
   return (
     <>
       <div
-        className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[550px] z-10 rounded-2xl overflow-hidden  ${
-          (receivingCall && !callAccepted && !callEnded) && ("hidden")
-        } `}
+        className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[550px] z-10 rounded-2xl overflow-hidden callbg
+        ${receiveingCall && !callAccepted ? "hidden" : ""}
+        `}
         onMouseOver={() => setShowActions(true)}
         onMouseOut={() => setShowActions(false)}
       >
@@ -78,7 +78,7 @@ export default function Call({
         </div>
       </div>
       {/*Ringing*/}
-      {receivingCall && !callAccepted ? (
+      {receiveingCall && !callAccepted ? (
         <Ringing
           call={call}
           setCall={setCall}

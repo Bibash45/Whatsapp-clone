@@ -1,33 +1,34 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { DocumentIcon } from "../../../../../svg";
-import { useDispatch } from "react-redux";
 import { addFiles } from "../../../../../features/chatSlice";
+import { useDispatch } from "react-redux";
 import { getFileType } from "../../../../../utils/file";
 
-const DocumentAttachment = () => {
+export default function DocumentAttachment() {
   const dispatch = useDispatch();
-  const inputRef = useRef(null);
+  const inputRef = useRef();
   const documentHandler = (e) => {
     let files = Array.from(e.target.files);
     files.forEach((file) => {
-      console.log(file);
-
       if (
         file.type !== "application/pdf" &&
         file.type !== "text/plain" &&
         file.type !== "application/msword" &&
         file.type !==
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document" &&
-        file.type !== "application,application/vnd.ms-powerpoint" &&
+        file.type !== "application/vnd.ms-powerpoint" &&
         file.type !==
           "application/vnd.openxmlformats-officedocument.presentationml.presentation" &&
         file.type !== "application/vnd.ms-excel" &&
-        file.type !== "application/zip" &&
+        file.type !==
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
         file.type !== "application/vnd.rar" &&
-        file.type !== "audio/mp3" &&
-        file.type !== "video/wav"
+        file.type !== "application/zip" &&
+        file.type !== "audio/mpeg" &&
+        file.type !== "audio/wav"
       ) {
         files = files.filter((item) => item.name !== file.name);
+        console.log(file.type);
         return;
       } else if (file.size > 1024 * 1024 * 10) {
         files = files.filter((item) => item.name !== file.name);
@@ -49,38 +50,20 @@ const DocumentAttachment = () => {
   return (
     <li>
       <button
-        onClick={() => inputRef.current.click()}
         type="button"
-        className="rounded-full bg-[#5F66CD]"
+        className="bg-[#5F66CD] rounded-full"
+        onClick={() => inputRef.current.click()}
       >
         <DocumentIcon />
       </button>
       <input
         type="file"
         hidden
-        ref={inputRef}
-        accept="
-    application/pdf,
-    text/plain,
-    application/msword,
-    application/vnd.openxmlformats-officedocument.wordprocessingml.document,
-    application/vnd.ms-powerpoint,
-    application/vnd.openxmlformats-officedocument.presentationml.presentation,
-    application/vnd.ms-excel,
-    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
-    application/zip,
-    application/vnd.rar,
-    application/x-tar,
-    application/x-7z-compressed,
-    application/json,
-    application/xml,
-    text/csv
-  "
-        onChange={documentHandler}
         multiple
+        ref={inputRef}
+        accept="application/*,text/plain"
+        onChange={documentHandler}
       />
     </li>
   );
-};
-
-export default DocumentAttachment;
+}

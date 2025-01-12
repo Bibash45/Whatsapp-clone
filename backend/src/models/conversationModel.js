@@ -1,16 +1,15 @@
 import mongoose from "mongoose";
 const { ObjectId } = mongoose.Schema.Types;
-
 const conversationSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Conversation is required"],
+      required: [true, "Conversations name is required."],
       trim: true,
     },
     picture: {
       type: String,
-      required: [true, "Conversation picture is required"],
+      required: true,
     },
     isGroup: {
       type: Boolean,

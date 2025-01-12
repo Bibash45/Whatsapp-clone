@@ -1,39 +1,59 @@
-import React from "react";
 import { useSelector } from "react-redux";
-import { CallIcon, DotsIcon, SearchLargeIcon, VideoCallIcon } from "../../../svg";
+import {
+  CallIcon,
+  DotsIcon,
+  SearchLargeIcon,
+  VideoCallIcon,
+} from "../../../svg";
 import { capitalize } from "../../../utils/string";
-
-const ChatHeader = ({ online,callUser }) => {
+import { useEffect, useRef, useState } from "react";
+import SocketContext from "../../../context/SocketContext";
+import Peer from "simple-peer";
+import {
+  getConversationName,
+  getConversationPicture,
+} from "../../../utils/chat";
+function ChatHeader({ online, callUser, socket }) {
   const { activeConversation } = useSelector((state) => state.chat);
-  const { name, picture } = activeConversation;
+  const { user } = useSelector((state) => state.user);
 
   return (
-    <div className="h-[59px] dark:bg-dark_bg_2 flex items-center p16 select-none ">
-      {/* Container */}
+    <div className="h-[59px] dark:bg-dark_bg_2 flex items-center p16 select-none">
+      {/*Container*/}
       <div className="w-full flex items-center justify-between">
-        {/* Left */}
+        {/*left*/}
         <div className="flex items-center gap-x-4">
-          {/* Container image */}
-          <button className="btn ">
+          {/*Conversation image*/}
+          <button className="btn">
             <img
-              src={picture}
-              alt={`${name} `}
+              src={
+                activeConversation.isGroup
+                  ? activeConversation.picture
+                  : getConversationPicture(user, activeConversation.users)
+              }
+              alt=""
               className="w-full h-full rounded-full object-cover"
             />
           </button>
-          {/* Conversation name and online status */}
+          {/*Conversation name and online status*/}
           <div className="flex flex-col">
-            <h1 className="dark:text-white text-md font-bold ">
-              {capitalize(name.split(" ")[0])}
+            <h1 className="dark:text-white text-md font-bold">
+              {activeConversation.isGroup
+                ? activeConversation.name
+                : capitalize(
+                    getConversationName(user, activeConversation.users).split(
+                      " "
+                    )[0]
+                  )}
             </h1>
             <span className="text-xs dark:text-dark_svg_2">
-              {online ? "online" : "offline"}
+              {online ? "online" : ""}
             </span>
           </div>
         </div>
-        {/* Right */}
-        <ul className="flex items-center gap-x-2.5 ">
-        {1 == 1 ? (
+        {/*Right*/}
+        <ul className="flex items-center gap-x-2.5">
+          {1 == 1 ? (
             <li onClick={() => callUser()}>
               <button className="btn">
                 <VideoCallIcon />
@@ -61,6 +81,11 @@ const ChatHeader = ({ online,callUser }) => {
       </div>
     </div>
   );
-};
+}
 
-export default ChatHeader;
+const ChatHeaderWithSocket = (props) => (
+  <SocketContext.Consumer>
+    {(socket) => <ChatHeader {...props} socket={socket} />}
+  </SocketContext.Consumer>
+);
+export default ChatHeaderWithSocket;

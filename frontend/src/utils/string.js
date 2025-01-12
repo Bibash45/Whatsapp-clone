@@ -1,3 +1,3 @@
-export const capitalize = (words) => {
-  return words[0].toUpperCase() + words.substring(1).toLowerCase();
+export const capitalize = (word) => {
+  return word[0].toUpperCase() + word.substring(1).toLowerCase();
 };

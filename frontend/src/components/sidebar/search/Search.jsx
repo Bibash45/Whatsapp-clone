@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { FilterIcon, ReturnIcon, SearchIcon } from "../../../svg";
 import axios from "axios";
+import { useState } from "react";
 import { useSelector } from "react-redux";
+import { FilterIcon, ReturnIcon, SearchIcon } from "../../../svg";
 
-const Search = ({ searchLength, setSearchResults }) => {
+export default function Search({ searchLength, setSearchResults }) {
   const { user } = useSelector((state) => state.user);
   const { token } = user;
-
   const [show, setShow] = useState(false);
   const handleSearch = async (e) => {
     if (e.target.value && e.key === "Enter") {
@@ -27,12 +26,11 @@ const Search = ({ searchLength, setSearchResults }) => {
       setSearchResults([]);
     }
   };
-
   return (
     <div className="h-[49px] py-1.5">
-      {/* container */}
+      {/*Container*/}
       <div className="px-[10px]">
-        {/* search input container */}
+        {/*Search input container*/}
         <div className="flex items-center gap-x-2">
           <div className="w-full flex dark:bg-dark_bg_2 rounded-lg pl-2">
             {show || searchLength > 0 ? (
@@ -52,7 +50,7 @@ const Search = ({ searchLength, setSearchResults }) => {
               placeholder="Search or start a new chat"
               className="input"
               onFocus={() => setShow(true)}
-              onBlur={() => searchLength === 0 && setShow(false)}
+              onBlur={() => searchLength == 0 && setShow(false)}
               onKeyDown={(e) => handleSearch(e)}
             />
           </div>
@@ -63,6 +61,4 @@ const Search = ({ searchLength, setSearchResults }) => {
       </div>
     </div>
   );
-};
-
-export default Search;
+}

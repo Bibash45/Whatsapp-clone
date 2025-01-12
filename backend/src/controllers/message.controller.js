@@ -10,9 +10,6 @@ export const sendMessage = async (req, res, next) => {
   try {
     const user_id = req.user.userId;
     const { message, convo_id, files } = req.body;
-    console.log("THis is files --------->",files);
-    
-
     if (!convo_id || (!message && !files)) {
       logger.error("Please provider a conversation id and a message body");
       return res.sendStatus(400);
@@ -21,7 +18,7 @@ export const sendMessage = async (req, res, next) => {
       sender: user_id,
       message,
       conversation: convo_id,
-      files: files,
+      files: files || [],
     };
     let newMessage = await createMessage(msgData);
     let populatedMessage = await populateMessage(newMessage._id);
@@ -31,7 +28,7 @@ export const sendMessage = async (req, res, next) => {
     next(error);
   }
 };
-export const getMessage = async (req, res, next) => {
+export const getMessages = async (req, res, next) => {
   try {
     const convo_id = req.params.convo_id;
     if (!convo_id) {

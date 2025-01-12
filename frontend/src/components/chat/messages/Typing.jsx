@@ -8,7 +8,7 @@ export default function Typing({ message }) {
       {/*Message Container*/}
       <div>
         <div
-          className={`relative h-full dark:text-dark_text_1 px-2 pt-1.5 rounded-lg dark:bg-dark_bg_2
+          className={`relative h-full dark:text-dark_text_1 p-2 rounded-lg dark:bg-dark_bg_2
         `}
         >
           {/*Typing animation*/}

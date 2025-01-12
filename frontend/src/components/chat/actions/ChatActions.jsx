@@ -1,31 +1,29 @@
-import React, { useRef, useState } from "react";
-import Input from "./Input";
-import { SendIcon } from "../../../svg";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { sendMessage } from "../../../features/chatSlice";
 import { ClipLoader } from "react-spinners";
-import EmojiPickerApp from "./EmojiPicker";
+import { sendMessage } from "../../../features/chatSlice";
+import { SendIcon } from "../../../svg";
 import { Attachments } from "./attachments";
+import EmojiPickerApp from "./EmojiPicker";
+import Input from "./Input";
 import SocketContext from "../../../context/SocketContext";
-const ChatActions = ({ socket }) => {
+function ChatActions({ socket }) {
   const dispatch = useDispatch();
-  const [showEmojis, setShowEmojis] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
   const [showAttachments, setShowAttachments] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const { activeConversation, status } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user);
   const { token } = user;
   const [message, setMessage] = useState("");
   const textRef = useRef();
-
   const values = {
     message,
     convo_id: activeConversation._id,
     files: [],
     token,
   };
-  const sendMessageHandler = async (e) => {
+  const SendMessageHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
     let newMsg = await dispatch(sendMessage(values));
@@ -35,31 +33,31 @@ const ChatActions = ({ socket }) => {
   };
   return (
     <form
-      onSubmit={(e) => sendMessageHandler(e)}
+      onSubmit={(e) => SendMessageHandler(e)}
       className="dark:bg-dark_bg_2 h-[60px] w-full flex items-center absolute bottom-0 py-2 px-4 select-none"
     >
-      {/* Container */}
+      {/*Container*/}
       <div className="w-full flex items-center gap-x-2">
-        {/* Emoji and attachments */}
+        {/*Emojis and attachpments*/}
         <ul className="flex gap-x-2">
           <EmojiPickerApp
             textRef={textRef}
             message={message}
             setMessage={setMessage}
-            showPicker={showEmojis}
-            setShowPicker={setShowEmojis}
+            showPicker={showPicker}
+            setShowPicker={setShowPicker}
             setShowAttachments={setShowAttachments}
           />
           <Attachments
             showAttachments={showAttachments}
             setShowAttachments={setShowAttachments}
-            setShowEmojis={setShowEmojis}
+            setShowPicker={setShowPicker}
           />
         </ul>
-        {/* Input */}
+        {/*Input*/}
         <Input message={message} setMessage={setMessage} textRef={textRef} />
-        {/* Send Button */}
-        <button className="btn" type="submit">
+        {/*Send button*/}
+        <button type="submit" className="btn">
           {status === "loading" && loading ? (
             <ClipLoader color="#E9EDEF" size={25} />
           ) : (
@@ -69,7 +67,7 @@ const ChatActions = ({ socket }) => {
       </div>
     </form>
   );
-};
+}
 
 const ChatActionsWithSocket = (props) => (
   <SocketContext.Consumer>

@@ -10,8 +10,8 @@ const userSchema = mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, "Please provide your email address"],
-      unique: [true, "This email address already exist"],
+      required: [true, "Please provide tour email address"],
+      unqiue: [true, "This email address already exist"],
       lowercase: true,
       validate: [validator.isEmail, "Please provide a valid email address"],
     },
@@ -22,15 +22,18 @@ const userSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      default: "Hey there ! I am using whatsap",
+      default: "Hey there ! I am using whatsapp",
     },
     password: {
       type: String,
       required: [true, "Please provide your password"],
-      minLength: [6, "Your password must be at least 6 characters"],
+      minLength: [
+        6,
+        "Plase make sure your password is atleast 6 characters long",
+      ],
       maxLength: [
         128,
-        "Please make sure your password is less than 128 character logn",
+        "Plase make sure your password is less than 128 characters long",
       ],
     },
   },
@@ -39,20 +42,18 @@ const userSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-
 userSchema.pre("save", async function (next) {
   try {
     if (this.isNew) {
       const salt = await bcrypt.genSalt(12);
       const hashedPassword = await bcrypt.hash(this.password, salt);
       this.password = hashedPassword;
-      next();
     }
+    next();
   } catch (error) {
-    next(err);
+    next(error);
   }
 });
-
 const UserModel =
   mongoose.models.UserModel || mongoose.model("UserModel", userSchema);
 

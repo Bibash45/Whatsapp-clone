@@ -1,29 +1,25 @@
-import React from "react";
-
-import Menu from "./menu/Menu";
 import { AttachmentIcon } from "../../../../svg";
+import Menu from "./menu/Menu";
 
-const Attachments = ({
+export default function Attachments({
   showAttachments,
   setShowAttachments,
-  setShowEmojis,
-}) => {
+  setShowPicker,
+}) {
   return (
     <li className="relative">
       <button
         onClick={() => {
+          setShowPicker(false);
           setShowAttachments((prev) => !prev);
-          setShowEmojis(false);
         }}
-        className="btn"
         type="button"
+        className="btn"
       >
         <AttachmentIcon className="dark:fill-dark_svg_1" />
       </button>
-      {/* Menu */}
+      {/*Menu*/}
       {showAttachments ? <Menu /> : null}
     </li>
   );
-};
-
-export default Attachments;
+}

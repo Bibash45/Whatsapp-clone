@@ -5,7 +5,7 @@ export default function Message({ message, me }) {
   return (
     <div
       className={`w-full flex mt-2 space-x-3 max-w-xs ${
-        me ? "ml-auto justify-end " : "justify-start"
+        me ? "ml-auto justify-end " : ""
       }`}
     >
       {/*Message Container*/}
@@ -26,7 +26,7 @@ export default function Message({ message, me }) {
         `}
         >
           {/*Message*/}
-          <p className="float-left h-full  text-sm pb-4 pr-8">
+          <p className="float-left h-full text-sm pb-4 pr-8">
             {message.message}
           </p>
           {/*Message Date*/}

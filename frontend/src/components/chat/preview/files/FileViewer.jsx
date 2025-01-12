@@ -2,8 +2,6 @@ import { useSelector } from "react-redux";
 
 export default function FileViewer({ activeIndex }) {
   const { files } = useSelector((state) => state.chat);
-  console.log(files[activeIndex]);
-
   return (
     <div className="w-full max-w-[60%]">
       {/*Container */}

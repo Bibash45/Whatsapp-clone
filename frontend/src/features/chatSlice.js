@@ -3,21 +3,23 @@ import axios from "axios";
 
 const CONVERSATION_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/conversation`;
 const MESSAGE_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/message`;
+
 const initialState = {
   status: "",
   error: "",
   conversations: [],
   activeConversation: {},
+  messages: [],
   notifications: [],
   files: [],
 };
 
-// functions
-export const getCoversations = createAsyncThunk(
-  "conversation/all",
+//functions
+export const getConversations = createAsyncThunk(
+  "conervsation/all",
   async (token, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`${CONVERSATION_ENDPOINT}`, {
+      const { data } = await axios.get(CONVERSATION_ENDPOINT, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -29,13 +31,13 @@ export const getCoversations = createAsyncThunk(
   }
 );
 export const open_create_conversation = createAsyncThunk(
-  "conversation/open_create",
+  "conervsation/open_create",
   async (values, { rejectWithValue }) => {
-    const { token, receiver_id } = values;
+    const { token, receiver_id, isGroup } = values;
     try {
       const { data } = await axios.post(
-        `${CONVERSATION_ENDPOINT}`,
-        { receiver_id },
+        CONVERSATION_ENDPOINT,
+        { receiver_id, isGroup },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -49,7 +51,7 @@ export const open_create_conversation = createAsyncThunk(
   }
 );
 export const getConversationMessages = createAsyncThunk(
-  "conversation/messages",
+  "conervsation/messages",
   async (values, { rejectWithValue }) => {
     const { token, convo_id } = values;
     try {
@@ -68,8 +70,6 @@ export const sendMessage = createAsyncThunk(
   "message/send",
   async (values, { rejectWithValue }) => {
     const { token, message, convo_id, files } = values;
-    console.log(files);
-
     try {
       const { data } = await axios.post(
         MESSAGE_ENDPOINT,
@@ -90,13 +90,32 @@ export const sendMessage = createAsyncThunk(
     }
   }
 );
-
+export const createGroupConversation = createAsyncThunk(
+  "conervsation/create_group",
+  async (values, { rejectWithValue }) => {
+    const { token, name, users } = values;
+    try {
+      const { data } = await axios.post(
+        `${CONVERSATION_ENDPOINT}/group`,
+        { name, users },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.error.message);
+    }
+  }
+);
 export const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    setActiveConversation: (state, actions) => {
-      state.activeConversation = actions.payload;
+    setActiveConversation: (state, action) => {
+      state.activeConversation = action.payload;
     },
     updateMessagesAndConversations: (state, action) => {
       //update messages
@@ -128,16 +147,16 @@ export const chatSlice = createSlice({
       state.files = files.filter((file) => !fileToRemove.includes(file));
     },
   },
-  extraReducers: (builder) => {
+  extraReducers(builder) {
     builder
-      .addCase(getCoversations.pending, (state, action) => {
+      .addCase(getConversations.pending, (state, action) => {
         state.status = "loading";
       })
-      .addCase(getCoversations.fulfilled, (state, action) => {
-        state.status = "succeded";
+      .addCase(getConversations.fulfilled, (state, action) => {
+        state.status = "succeeded";
         state.conversations = action.payload;
       })
-      .addCase(getCoversations.rejected, (state, action) => {
+      .addCase(getConversations.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
@@ -145,7 +164,7 @@ export const chatSlice = createSlice({
         state.status = "loading";
       })
       .addCase(open_create_conversation.fulfilled, (state, action) => {
-        state.status = "succeded";
+        state.status = "succeeded";
         state.activeConversation = action.payload;
         state.files = [];
       })
@@ -157,7 +176,7 @@ export const chatSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getConversationMessages.fulfilled, (state, action) => {
-        state.status = "succeded";
+        state.status = "succeeded";
         state.messages = action.payload;
       })
       .addCase(getConversationMessages.rejected, (state, action) => {
@@ -168,12 +187,8 @@ export const chatSlice = createSlice({
         state.status = "loading";
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
-        state.status = "succeded";
+        state.status = "succeeded";
         state.messages = [...state.messages, action.payload];
-      })
-      .addCase(sendMessage.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
         let conversation = {
           ...action.payload.conversation,
           latestMessage: action.payload,
@@ -183,10 +198,14 @@ export const chatSlice = createSlice({
         );
         newConvos.unshift(conversation);
         state.conversations = newConvos;
+        state.files = [];
+      })
+      .addCase(sendMessage.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
       });
   },
 });
-
 export const {
   setActiveConversation,
   updateMessagesAndConversations,

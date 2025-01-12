@@ -1,14 +1,14 @@
-import React, { useState } from "react";
 import {
   CameraIcon,
   ContactIcon,
+  DocumentIcon,
   PollIcon,
   StickerIcon,
 } from "../../../../../svg";
-import PhotoAttacment from "./PhotoAttacment";
 import DocumentAttachment from "./DocumentAttachment";
+import PhotoAttachment from "./PhotoAttachment";
 
-const Menu = () => {
+export default function Menu() {
   return (
     <ul className="absolute bottom-14 openEmojiAnimation">
       <li>
@@ -23,7 +23,7 @@ const Menu = () => {
       </li>
       <DocumentAttachment />
       <li>
-        <button type="button" className="rounded-full bg-[#D3396D]">
+        <button type="button" className="bg-[#D3396D] rounded-full">
           <CameraIcon />
         </button>
       </li>
@@ -32,9 +32,7 @@ const Menu = () => {
           <StickerIcon />
         </button>
       </li>
-      <PhotoAttacment />
+      <PhotoAttachment />
     </ul>
   );
-};
-
-export default Menu;
+}

@@ -4,7 +4,7 @@ export const dateHandler = (date) => {
   let now = moment();
   let momentDate = moment(date);
   let time = momentDate.fromNow(true);
-  let dateByHourAndMin = momentDate.format("h:mm A"); // Modified to include AM/PM
+  let dateByHourAndMin = momentDate.format("HH:mm");
   const getDay = () => {
     let days = time.split(" ")[0];
     if (Number(days) < 8) {
