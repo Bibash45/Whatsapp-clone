@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node ./src/index.js",
-    "dev": "cross-env NODE_ENV=development nodemon ./src/index.js",
+    "dev": "npx cross-env NODE_ENV=development nodemon ./src/index.js",
     "client": "npm start --prefix frontend",
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
@@ -25,7 +25,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.0",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.21",
+    "nodemon": "^3.1.9",
     "socket.io": "^4.6.1",
     "trim-request": "^1.0.6",
     "validator": "^13.9.0",
