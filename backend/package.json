@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "node ./src/index.js",
+    "start": "nodemon ./src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon ./src/index.js",
     "client": "npm start --prefix frontend",
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
