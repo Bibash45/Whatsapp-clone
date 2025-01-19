@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Peer from "simple-peer";
-import { ChatContainer, WhatsappHome } from "../components/Chat";
+
 import { Sidebar } from "../components/sidebar";
 import SocketContext from "../context/SocketContext";
 import {
   getConversations,
   updateMessagesAndConversations,
 } from "../features/chatSlice";
-import Call from "../components/Chat/call/Call";
+import Call from "../components/chat/call/Call";
+import ChatContainer from "./../components/chat/ChatContainer";
+import WhatsappHome from './../components/chat/welcome/WhatsappHome';
 import {
   getConversationId,
   getConversationName,

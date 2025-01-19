@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signUpSchema } from "../../utils/validation";
-import AuthInput from "./AuthInput";
 import { useDispatch, useSelector } from "react-redux";
 import PulseLoader from "react-spinners/PulseLoader";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,6 +8,7 @@ import { changeStatus, registerUser } from "../../features/userSlice";
 import { useState } from "react";
 import Picture from "./Picture";
 import axios from "axios";
+import AuthInput from "./Authinput";
 const cloud_name = process.env.REACT_APP_CLOUD_NAME;
 const cloud_secret = process.env.REACT_APP_CLOUD_SECRET;
 export default function RegisterForm() {

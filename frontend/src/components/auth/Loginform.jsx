@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signInSchema } from "../../utils/validation";
-import AuthInput from "./AuthInput";
 import { useDispatch, useSelector } from "react-redux";
 import PulseLoader from "react-spinners/PulseLoader";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../features/userSlice";
+import AuthInput from "./Authinput";
 export default function RegisterForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
