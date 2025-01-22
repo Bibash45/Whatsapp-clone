@@ -25,6 +25,9 @@ if (process.env.NODE_ENV !== "production") {
 // Dynamic folder for deployment in render
 const __dirname = path.resolve();
 
+// serving static files
+app.use(express.static(path.join(__dirname, "public")));
+
 //helmet
 // app.use(helmet());
 
@@ -56,15 +59,13 @@ app.use(cors());
 //api v1 routes
 app.use("/api/v1", routes);
 
+// Serve static files from the CRA build folder
+app.use(express.static(path.join(__dirname, "frontend", "build")));
 
-//for deployment in render
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
-
-
+// Catch-all handler to serve the React app for any unknown routes
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "frontend", "build", "index.html"));
 });
-
 
 app.use(async (req, res, next) => {
   next(createHttpError.NotFound("This route does not exist."));

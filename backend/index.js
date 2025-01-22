@@ -7,6 +7,8 @@ import SocketServer from "./src/SocketServer.js";
 const { DATABASE_URL } = process.env;
 const PORT = process.env.PORT || 8000;
 
+
+
 //exit on mognodb error
 mongoose.connection.on("error", (err) => {
   logger.error(`Mongodb connection error : ${err}`);
