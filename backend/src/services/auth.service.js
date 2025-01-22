@@ -1,6 +1,6 @@
 import createHttpError from "http-errors";
 import validator from "validator";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { UserModel } from "../models/index.js";
 
 //env variables
