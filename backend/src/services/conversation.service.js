@@ -1,12 +1,21 @@
 import createHttpError from "http-errors";
 import { ConversationModel, UserModel } from "../models/index.js";
 
-export const doesConversationExist = async (
-  sender_id,
-  receiver_id,
-  isGroup
-) => {
-  if (isGroup === false) {
+
+
+export const findUser = async (userId) => {
+  try {
+    const user = await UserModel.findById(userId);
+    return user;
+  } catch (error) {
+    throw createHttpError.InternalServerError("Error finding the user.");
+  }
+};
+
+// Function to check if a conversation exists
+export const doesConversationExist = async (sender_id, receiver_id, isGroup) => {
+  if (!isGroup) {
+    // Find private conversations
     let convos = await ConversationModel.find({
       isGroup: false,
       $and: [
@@ -17,10 +26,9 @@ export const doesConversationExist = async (
       .populate("users", "-password")
       .populate("latestMessage");
 
-    if (!convos)
-      throw createHttpError.BadRequest("Oops...Something went wrong !");
+    if (!convos || convos.length === 0) return null; // Return null if no conversation exists
 
-    //populate message model
+    // Populate the latest message sender
     convos = await UserModel.populate(convos, {
       path: "latestMessage.sender",
       select: "name email picture status",
@@ -28,27 +36,29 @@ export const doesConversationExist = async (
 
     return convos[0];
   } else {
-    //it's a group chat
-    let convo = await ConversationModel.findById(isGroup)
+    // Find group conversations
+    const convo = await ConversationModel.findById(isGroup)
       .populate("users admin", "-password")
       .populate("latestMessage");
 
-    if (!convo)
-      throw createHttpError.BadRequest("Oops...Something went wrong !");
-    //populate message model
-    convo = await UserModel.populate(convo, {
+    if (!convo) return null; // Return null if no group conversation exists
+
+    // Populate the latest message sender
+    const populatedConvo = await UserModel.populate(convo, {
       path: "latestMessage.sender",
       select: "name email picture status",
     });
 
-    return convo;
+    return populatedConvo;
   }
 };
 
+// Function to create a new conversation
 export const createConversation = async (data) => {
   const newConvo = await ConversationModel.create(data);
-  if (!newConvo)
-    throw createHttpError.BadRequest("Oops...Something went wrong !");
+  if (!newConvo) {
+    throw createHttpError.InternalServerError("Failed to create a new conversation.");
+  }
   return newConvo;
 };
 

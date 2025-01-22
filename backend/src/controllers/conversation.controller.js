@@ -3,6 +3,7 @@ import logger from "../configs/logger.config.js";
 import {
   createConversation,
   doesConversationExist,
+  findUser,
   getUserConversations,
   populateConversation,
 } from "../services/conversation.service.js";
@@ -12,48 +13,45 @@ export const create_open_conversation = async (req, res, next) => {
   try {
     const sender_id = req.user.userId;
     const { receiver_id, isGroup } = req.body;
-    if (isGroup == false) {
-      //check if receiver_id is provided
+
+    console.log(sender_id);
+    console.log(receiver_id);
+
+    if (!isGroup) {
+      // Validate receiver ID
       if (!receiver_id) {
-        logger.error(
-          "please provide the user id you wanna start a conversation with !"
-        );
-        throw createHttpError.BadGateway("Oops...Something went wrong !");
+        logger.error("Please provide the user ID you want to start a conversation with!");
+        throw createHttpError.BadRequest("Receiver ID is required.");
       }
-      //check if chat exists
-      const existed_conversation = await doesConversationExist(
-        sender_id,
-        receiver_id,
-        false
-      );
-      if (existed_conversation) {
-        res.json(existed_conversation);
-      } else {
-        // let receiver_user = await findUser(receiver_id);
-        let convoData = {
-          name: "conversation name",
-          picture: "conversation picture",
-          isGroup: false,
-          users: [sender_id, receiver_id],
-        };
-        const newConvo = await createConversation(convoData);
-        const populatedConvo = await populateConversation(
-          newConvo._id,
-          "users",
-          "-password"
-        );
-        res.status(200).json(populatedConvo);
+
+      // Check if a conversation already exists
+      const existingConversation = await doesConversationExist(sender_id, receiver_id, false);
+      if (existingConversation) {
+        return res.status(200).json(existingConversation);
       }
+
+      // Fetch receiver user
+      const receiverUser = await findUser(receiver_id);
+      if (!receiverUser) {
+        logger.error("User not found");
+        throw createHttpError.NotFound("Receiver user not found.");
+      }
+
+      // Create a new conversation
+      const convoData = {
+        name: receiverUser.name,
+        picture: receiverUser.picture,
+        isGroup: false,
+        users: [sender_id, receiver_id],
+      };
+      const newConvo = await createConversation(convoData);
+      const populatedConvo = await populateConversation(newConvo._id, "users", "-password");
+
+      return res.status(201).json(populatedConvo);
     } else {
-      console.log("hnaaaaaaaaaa");
-      //it's a group chat
-      //check if group chat exists
-      const existed_group_conversation = await doesConversationExist(
-        "",
-        "",
-        isGroup
-      );
-      res.status(200).json(existed_group_conversation);
+      // Handle group chat
+      const existingGroupConvo = await doesConversationExist("", "", isGroup);
+      return res.status(200).json(existingGroupConvo);
     }
   } catch (error) {
     next(error);
