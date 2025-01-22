@@ -9,6 +9,7 @@ import fileUpload from "express-fileupload";
 import cors from "cors";
 import createHttpError from "http-errors";
 import routes from "./routes/index.js";
+import path from "path";
 
 //dotEnv config
 dotenv.config();
@@ -20,6 +21,9 @@ const app = express();
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
+
+// Dynamic folder for deployment in render
+const __dirname = path.resolve();
 
 //helmet
 // app.use(helmet());
@@ -51,6 +55,16 @@ app.use(cors());
 
 //api v1 routes
 app.use("/api/v1", routes);
+
+
+//for deployment in render
+app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+});
+
 
 app.use(async (req, res, next) => {
   next(createHttpError.NotFound("This route does not exist."));
